@@ -1,6 +1,6 @@
 package com.ecommerce.user.service;
 
-import com.ecommerce.config.JwtService;
+import com.ecommerce.config.JwtUtil;
 import com.ecommerce.user.dto.AuthRequest;
 import com.ecommerce.user.dto.AuthResponse;
 import com.ecommerce.user.dto.RegisterRequest;
@@ -18,7 +18,7 @@ public class AuthService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final JwtService jwtService;
+    private final JwtUtil jwtService;
 
     public AuthResponse register(RegisterRequest request) {
         User user = User.builder()

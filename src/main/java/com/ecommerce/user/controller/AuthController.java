@@ -1,6 +1,6 @@
 package com.ecommerce.user.controller;
 
-import com.ecommerce.config.JwtService;
+import com.ecommerce.config.JwtUtil;
 import com.ecommerce.user.dto.AuthRequest;
 import com.ecommerce.user.dto.AuthResponse;
 import com.ecommerce.user.model.User;
@@ -22,7 +22,7 @@ public class AuthController {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
-    private final JwtService jwtService;
+    private final JwtUtil jwtService;
 
     @PostMapping("/signup")
     public AuthResponse signup(@RequestBody User user) {
