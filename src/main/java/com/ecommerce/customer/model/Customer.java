@@ -40,9 +40,15 @@ public class Customer {
     @CollectionTable(name = "customer_addresses", joinColumns = @JoinColumn(name = "customer_id"))
     private List<Address> addresses = new ArrayList<>();
 
-    // Fields referencing Product — skipped for now
-    // private List<UUID> wishlist;
-    // private List<UUID> recentlyViewed;
+    @ElementCollection
+    @CollectionTable(name = "customer_wishlist", joinColumns = @JoinColumn(name = "customer_id"))
+    @Column(name = "product_id")
+    private List<UUID> wishlist = new ArrayList<>();
+
+    @ElementCollection
+    @CollectionTable(name = "customer_recently_viewed", joinColumns = @JoinColumn(name = "customer_id"))
+    @Column(name = "product_id")
+    private List<UUID> recentlyViewed = new ArrayList<>();
 
     @CreationTimestamp
     private Instant createdAt;

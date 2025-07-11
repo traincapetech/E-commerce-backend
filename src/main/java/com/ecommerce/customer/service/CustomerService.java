@@ -76,4 +76,36 @@ public class CustomerService {
         return customerRepo.save(customer);
     }
 
+    public void addToWishlist(UUID customerId, UUID productId) {
+        Customer customer = customerRepo.findById(customerId).orElseThrow();
+        if (!customer.getWishlist().contains(productId)) {
+            customer.getWishlist().add(productId);
+            customer.setUpdatedAt(Instant.now());
+            customerRepo.save(customer);
+        }
+    }
+
+    public void removeFromWishlist(UUID customerId, UUID productId) {
+        Customer customer = customerRepo.findById(customerId).orElseThrow();
+        if (customer.getWishlist().remove(productId)) {
+            customer.setUpdatedAt(Instant.now());
+            customerRepo.save(customer);
+        }
+    }
+
+    public void addToRecentlyViewed(UUID customerId, UUID productId) {
+        Customer customer = customerRepo.findById(customerId).orElseThrow();
+        List<UUID> viewed = customer.getRecentlyViewed();
+
+        viewed.remove(productId); // Ensure uniqueness
+        viewed.add(0, productId); // Add to front
+        if (viewed.size() > 10) { // Limit size
+            viewed.remove(viewed.size() - 1);
+        }
+
+        customer.setUpdatedAt(Instant.now());
+        customerRepo.save(customer);
+    }
+
+
 }

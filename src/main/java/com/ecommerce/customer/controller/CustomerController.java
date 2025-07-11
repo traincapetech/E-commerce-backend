@@ -66,6 +66,37 @@ public class CustomerController {
         return ResponseEntity.noContent().build();
     }
 
+    @Operation(summary = "Add product to wishlist")
+    @PostMapping("/{id}/wishlist/{productId}")
+    public ResponseEntity<Void> addToWishlist(
+            @PathVariable("id") UUID customerId,
+            @PathVariable("productId") UUID productId
+    ) {
+        customerService.addToWishlist(customerId, productId);
+        return ResponseEntity.ok().build();
+    }
+
+    @Operation(summary = "Remove product from wishlist")
+    @DeleteMapping("/{id}/wishlist/{productId}")
+    public ResponseEntity<Void> removeFromWishlist(
+            @PathVariable("id") UUID customerId,
+            @PathVariable("productId") UUID productId
+    ) {
+        customerService.removeFromWishlist(customerId, productId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @Operation(summary = "Add product to recently viewed")
+    @PostMapping("/{id}/recently-viewed/{productId}")
+    public ResponseEntity<Void> addToRecentlyViewed(
+            @PathVariable("id") UUID customerId,
+            @PathVariable("productId") UUID productId
+    ) {
+        customerService.addToRecentlyViewed(customerId, productId);
+        return ResponseEntity.ok().build();
+    }
+
+
     @Operation(summary = "Update customer by ID")
     @PutMapping("/{id}")
     public ResponseEntity<Customer> updateCustomer(
