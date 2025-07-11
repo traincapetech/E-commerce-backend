@@ -30,11 +30,13 @@ public class VendorService {
             throw new IllegalArgumentException("Password is required");
         }
 
+        UUID id = UUID.randomUUID(); // ✅ Generate a shared UUID
+
         // Save Vendor entity
         Vendor vendor = new Vendor();
+        vendor.setId(id); // ✅ Set shared ID
         vendor.setUsername(dto.getUsername());
         vendor.setEmail(dto.getEmail());
-        vendor.setPassword(passwordEncoder.encode(dto.getPassword()));
         vendor.setName(dto.getName());
         vendor.setContactNumber(dto.getContactNumber());
 
@@ -49,14 +51,17 @@ public class VendorService {
         vendor.setUpdatedAt(Instant.now());
         vendorRepository.save(vendor);
 
-        // Create corresponding User
+        // Save User entity
         User user = new User();
+        user.setId(id); // ✅ Use the same UUID
         user.setUsername(dto.getUsername());
         user.setEmail(dto.getEmail());
         user.setPassword(passwordEncoder.encode(dto.getPassword()));
         user.setRole(Role.VENDOR);
         userRepository.save(user);
     }
+
+
 
     public Vendor getVendor(UUID id) {
         return vendorRepository.findById(id).orElseThrow();
