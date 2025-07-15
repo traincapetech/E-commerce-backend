@@ -94,4 +94,9 @@ public class OrderService {
         return orderRepository.save(order);
     }
 
+    public List<Order> getOrdersByDeliveryBoyId(UUID deliveryBoyId) {
+        return orderRepository.findByDeliveryBoyId(deliveryBoyId);
+    }
+
+
 }

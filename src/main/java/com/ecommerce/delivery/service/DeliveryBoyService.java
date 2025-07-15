@@ -2,7 +2,11 @@ package com.ecommerce.delivery.service;
 
 import com.ecommerce.delivery.model.DeliveryBoy;
 import com.ecommerce.delivery.repo.DeliveryBoyRepository;
+import com.ecommerce.user.model.Role;
+import com.ecommerce.user.model.User;
+import com.ecommerce.user.repo.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -14,13 +18,32 @@ import java.util.UUID;
 public class DeliveryBoyService {
 
     private final DeliveryBoyRepository deliveryBoyRepository;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder; // For encoding passwords
 
     public DeliveryBoy addDeliveryBoy(DeliveryBoy deliveryBoy) {
+        UUID id = UUID.randomUUID(); // Generate a shared ID
+
+        deliveryBoy.setId(id);
         deliveryBoy.setAvailable(true);
         deliveryBoy.setCreatedAt(Instant.now());
         deliveryBoy.setUpdatedAt(Instant.now());
-        return deliveryBoyRepository.save(deliveryBoy);
+
+        // Save delivery boy
+        DeliveryBoy savedDeliveryBoy = deliveryBoyRepository.save(deliveryBoy);
+
+        // Create corresponding user with same ID
+        User user = new User();
+        user.setId(id); // Same ID as delivery boy
+        user.setUsername(deliveryBoy.getPhone()); // Use phone as username (or something else)
+        user.setPassword(passwordEncoder.encode(deliveryBoy.getPassword())); // Default password
+        user.setRole(Role.DELIVERY_BOY);
+
+        userRepository.save(user);
+
+        return savedDeliveryBoy;
     }
+
 
     public DeliveryBoy assignAvailableDeliveryBoy() {
         return deliveryBoyRepository.findFirstByAvailableTrue()

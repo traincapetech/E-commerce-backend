@@ -24,6 +24,8 @@ public class DeliveryBoy {
 
     private String phone;
 
+    private String password;
+
     private boolean available = true;
 
     private Instant createdAt;

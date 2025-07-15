@@ -103,4 +103,18 @@ public class OrderController {
         return ResponseEntity.ok(orderService.updatePaymentStatus(id, status));
     }
 
+    @GetMapping("/delivery-boy/{deliveryBoyId}")
+    public ResponseEntity<List<Order>> getOrdersByDeliveryBoy(
+            @PathVariable("deliveryBoyId")
+            @Parameter(
+                    name = "deliveryBoyId",
+                    description = "UUID of the delivery boy",
+                    required = true,
+                    example = "f304c29f-0aee-4aa5-a61d-c34f33a98d51",
+                    schema = @Schema(type = "string", format = "uuid")
+            ) UUID deliveryBoyId) {
+        List<Order> orders = orderService.getOrdersByDeliveryBoyId(deliveryBoyId);
+        return ResponseEntity.ok(orders);
+    }
+
 }
