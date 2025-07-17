@@ -1,5 +1,7 @@
 package com.ecommerce.order.controller;
 
+import com.ecommerce.delivery.model.DeliveryBoy;
+import com.ecommerce.delivery.service.DeliveryBoyService;
 import com.ecommerce.order.model.Order;
 import com.ecommerce.order.service.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -9,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
@@ -18,6 +21,7 @@ import java.util.UUID;
 public class OrderController {
 
     private final OrderService orderService;
+    private final DeliveryBoyService deliveryBoyService;
 
     @Operation(summary = "Place a new order")
     @PostMapping
@@ -116,5 +120,33 @@ public class OrderController {
         List<Order> orders = orderService.getOrdersByDeliveryBoyId(deliveryBoyId);
         return ResponseEntity.ok(orders);
     }
+
+    @PostMapping("/{orderId}/confirm-payment")
+    public ResponseEntity<String> confirmPayment(
+            @PathVariable("orderId")
+            @Parameter(
+                    name = "orderId",
+                    description = "UUID of the order to confirm payment for",
+                    required = true,
+                    example = "3e274df3-bce2-4f37-9c69-0a4e0d9bb5fb",
+                    schema = @Schema(type = "string", format = "uuid")
+            ) UUID orderId) {
+
+        Order order = orderService.getOrderById(orderId);
+        order.setPaymentStatus("paid");
+        order.setUpdatedAt(Instant.now());
+
+        // Assign delivery boy
+        DeliveryBoy deliveryBoy = deliveryBoyService.assignAvailableDeliveryBoy();
+        deliveryBoy.setAvailable(false);
+        deliveryBoy.setUpdatedAt(Instant.now());
+        deliveryBoyService.updateDeliveryBoy(deliveryBoy);
+
+        order.setDeliveryBoy(deliveryBoy);
+        orderService.save(order);
+
+        return ResponseEntity.ok("Payment confirmed and delivery boy assigned.");
+    }
+
 
 }

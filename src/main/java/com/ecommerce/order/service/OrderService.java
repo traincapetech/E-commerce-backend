@@ -33,17 +33,12 @@ public class OrderService {
         order.setOrderStatus("processing");
         order.setPaymentStatus("pending");
 
-        // Assign available delivery boy
-        DeliveryBoy deliveryBoy = deliveryBoyService.assignAvailableDeliveryBoy();
-        deliveryBoy.setAvailable(false); // mark him unavailable
-        deliveryBoy.setUpdatedAt(Instant.now());
-        deliveryBoyService.updateDeliveryBoy(deliveryBoy); // update delivery boy record
-
-        // Set delivery boy in order (this line is fixed)
-        order.setDeliveryBoy(deliveryBoy);
+        // ❌ Do NOT assign delivery boy here
+        // Leave deliveryBoy as null
 
         return orderRepository.save(order);
     }
+
 
 
 
@@ -97,6 +92,11 @@ public class OrderService {
     public List<Order> getOrdersByDeliveryBoyId(UUID deliveryBoyId) {
         return orderRepository.findByDeliveryBoyId(deliveryBoyId);
     }
+
+    public Order save(Order order) {
+        return orderRepository.save(order);
+    }
+
 
 
 }
