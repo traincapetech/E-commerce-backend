@@ -12,7 +12,6 @@
         <spring.boot.version>3.2.5</spring.boot.version>
     </properties>
 
-    <!-- ✅ Use Spring Boot BOM to manage versions -->
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -46,7 +45,7 @@
             <artifactId>mysql-connector-j</artifactId>
         </dependency>
 
-        <!-- JWT (secure version that integrates with Jackson) -->
+        <!-- JWT -->
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-api</artifactId>
@@ -73,28 +72,34 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- Swagger/OpenAPI -->
+        <!-- Swagger -->
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
             <version>2.3.0</version>
         </dependency>
 
-        <!-- pom.xml -->
+        <!-- Stripe -->
         <dependency>
             <groupId>com.stripe</groupId>
             <artifactId>stripe-java</artifactId>
             <version>24.10.0</version>
         </dependency>
-
     </dependencies>
 
     <build>
         <plugins>
-            <!-- Spring Boot Plugin -->
+            <!-- ✅ Spring Boot Plugin with repackage -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
 
             <!-- Compiler Plugin -->
